@@ -18,9 +18,6 @@ describe Movie do
           allow(movieArray[0]).to receive(:id).and_return('1')
           allow(movieArray[0]).to receive(:title).and_return('first_title')
           allow(movieArray[0]).to receive(:release_date).and_return('date1')
-          # allow(movieArray[1]).to receive(:id).and_return('2')
-          # allow(movieArray[1]).to receive(:title).and_return('second_title')
-          # allow(movieArray[1]).to receive(:release_date).and_return('date2')
           allow(Tmdb::Movie).to receive(:find).with('When Harry Met Sally').and_return(movieArray)
           allow(Tmdb::Movie).to receive(:releases).with('1').and_return(releases[0])
           # allow(Tmdb::Movie).to receive(:releases).with('2').and_return(releases[1])
@@ -32,7 +29,6 @@ describe Movie do
           expect(results[0][:rating]).to eq('Not rated')
           # expect(results[1][:rating]).to eq('PG')
           expect(results[0][:release_date]).to eq('date1')
-          # expect(results[1][:release_date]).to eq('date2')
       end
     end
     context 'with invalid key' do
@@ -59,10 +55,10 @@ describe Movie do
         expect(result[:release_date]).to eq("1989-07-21")
       end
     end
-    context 'with invalid key' do # error here
+    context 'with invalid key' do 
       it 'should raise InvalidKeyError if key is missing or invalid' do
-        allow(Tmdb::Movie).to receive(:detail).and_raise(Tmdb::InvalidApiKeyError)
-        expect {Movie.create_from_tmdb(1)}.to raise_error(Movie::InvalidKeyError)
+        allow(Tmdb::Movie).to receive(:find).and_raise(Tmdb::InvalidApiKeyError)
+        expect {Movie.find_in_tmdb('When Harry Met Sally')}.to raise_error(Movie::InvalidKeyError)
       end
     end
   end
